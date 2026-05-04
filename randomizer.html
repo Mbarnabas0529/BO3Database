@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BO3 GobbleGum Console Commands</title>
+    <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- Hamburger Icon -->
+    <div class="hamburger" id="hamburgerMenu">
+        <span></span>
+        <span></span>
+        <span></span>
+    </div>
+
+    <!-- Side Menu -->
+    <nav class="side-menu" id="sideMenu">
+        <ul>
+            <li><a href="index.html" id="nav-home">Home</a></li>
+            <li><a href="collection.html" id="nav-collection">Collection</a></li>
+            <li><a href="randomizer.html" id="nav-randomizer">Randomizer</a></li>
+            <li><a href="#" class="wip-link">Mods <span class="wip-icon" title="Work in progress">⚠️</span></a></li>
+        </ul>
+    </nav>
+
+    <header>
+        <h1 id="page-title">GobbleGum Randomizer</h1>
+        <p class="subtitle" id="page-subtitle">Spin 5 random GobbleGums!</p>
+    </header>
+
+    <div class="container" id="randomizer-container" style="display: flex; flex-direction: column; align-items: center; justify-content: flex-start; gap: 40px; margin-top: 20px;">
+        <div class="loadout-slots" id="loadoutSlots">
+            <div class="slot empty"></div>
+            <div class="slot empty"></div>
+            <div class="slot empty"></div>
+            <div class="slot empty"></div>
+            <div class="slot empty"></div>
+        </div>
+
+        <div class="spinner-wrapper" id="spinnerWrapper" style="display: none;">
+            <div class="spinner-window">
+                <div class="spinner-line"></div>
+                <div class="spinner-track" id="spinnerTrack"></div>
+            </div>
+        </div>
+
+        <button class="action-btn" id="spinBtn">Spin (0/5)</button>
+        <button class="action-btn secondary" id="resetBtn" style="display: none;">Reset</button>
+
+        <!-- Rolled cards will appear here -->
+        <div id="rolledCardsContainer" class="container" style="margin-top: 40px; width: 100%;"></div>
+    </div>
+
+    <script src="randomizer.js"></script>
+</body>
+</html>

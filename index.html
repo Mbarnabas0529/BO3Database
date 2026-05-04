@@ -1,0 +1,57 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BO3 GobbleGum Terminal</title>
+    <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="home-page">
+
+    <!-- Hamburger Icon -->
+    <div class="hamburger" id="hamburgerMenu">
+        <span></span>
+        <span></span>
+        <span></span>
+    </div>
+
+    <!-- Side Menu -->
+    <nav class="side-menu" id="sideMenu">
+        <ul>
+            <li><a href="index.html" id="nav-home">Home</a></li>
+            <li><a href="collection.html" id="nav-collection">Collection</a></li>
+            <li><a href="randomizer.html" id="nav-randomizer">Randomizer</a></li>
+            <li><a href="#" class="wip-link">Mods <span class="wip-icon" title="Work in progress">⚠️</span></a></li>
+        </ul>
+    </nav>
+
+    <header style="display: none;">
+        <!-- Replaced by full hero section below -->
+    </header>
+
+    <div class="home-hero">
+        <h1>GobbleGum Terminal</h1>
+        <p>Welcome to the BO3 Zombies console command database. Use the menu in the top left corner to browse the collection or spin the randomizer!</p>
+    </div>
+
+    <script>
+        // Hamburger menu functionality
+        const hamburger = document.getElementById('hamburgerMenu');
+        const sideMenu = document.getElementById('sideMenu');
+
+        if(hamburger) {
+            hamburger.addEventListener('click', () => {
+                sideMenu.classList.toggle('open');
+            });
+
+            // Close if clicked outside
+            document.addEventListener('click', (e) => {
+                if (!sideMenu.contains(e.target) && !hamburger.contains(e.target) && sideMenu.classList.contains('open')) {
+                    sideMenu.classList.remove('open');
+                }
+            });
+        }
+    </script>
+</body>
+</html>

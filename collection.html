@@ -31,8 +31,34 @@
         <p class="subtitle" id="page-subtitle">Console Command Reference Database</p>
         <div class="search-container" id="searchContainer">
             <input type="text" id="searchInput" placeholder="Search...">
+            <button id="toggleGeneratorBtn" class="action-btn">Pack Generator</button>
         </div>
     </header>
+
+    <!-- Generator Panel (Hidden by default) -->
+    <div id="generatorPanel" class="generator-panel" style="display: none;">
+        <h2>Selected GobbleGums (<span id="selectedCount">0</span>/5)</h2>
+        <div class="selected-gums-grid" id="selectedGumsGrid"></div>
+        <textarea id="generatedCommandOutput" readonly placeholder="Selected commands will appear here..."></textarea>
+        <button id="copyGeneratedBtn" class="action-btn">Copy All</button>
+    </div>
+
+    <!-- Modal Popup (Hidden by default) -->
+    <div id="gumModal" class="modal-overlay" style="display: none;">
+        <div class="modal-content">
+            <span class="close-modal" id="closeModal">&times;</span>
+            <div class="modal-header">
+                <img id="modalImage" src="" alt="GobbleGum">
+                <div class="modal-title-wrapper">
+                    <h2 id="modalName">Name</h2>
+                    <span id="modalType" class="gg-type">Type</span>
+                </div>
+            </div>
+            <div class="modal-body">
+                <p id="modalEffect">Effect description...</p>
+            </div>
+        </div>
+    </div>
 
     <div class="container" id="gum-container">
     </div>

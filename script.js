@@ -77,7 +77,7 @@ gobblegums.forEach(gum => {
     const typeClass = gum.type === 'Mega' ? 'type-mega' : 'type-classic';
 
     const cardHTML = `
-        <div class="gobblegum-card">
+        <div class="gobblegum-card" data-index="${gobblegums.indexOf(gum)}">
             <div class="card-header">
                 <img src="images/${imageName}" alt="${gum.name}" class="gg-image" onerror="this.src='data:image/svg+xml;utf8,<svg xmlns=\\'http://www.w3.org/2000/svg\\'><rect width=\\'100%\\' height=\\'100%\\' fill=\\'%23333\\'/></svg>'">
                 <div class="gg-info">
@@ -90,6 +90,7 @@ gobblegums.forEach(gum => {
                 <span>${gum.command}</span>
                 <span class="copy-hint">Copy</span>
             </div>
+            <button class="select-btn" onclick="toggleSelection(${gobblegums.indexOf(gum)}, this)">Select</button>
         </div>
     `;
     container.innerHTML += cardHTML;
@@ -129,3 +130,143 @@ document.addEventListener('click', (e) => {
     }
 });
 
+
+// Generator Functionality
+let selectedGums = [];
+const maxSelection = 5;
+const toggleGeneratorBtn = document.getElementById('toggleGeneratorBtn');
+const generatorPanel = document.getElementById('generatorPanel');
+const selectedGumsGrid = document.getElementById('selectedGumsGrid');
+const generatedCommandOutput = document.getElementById('generatedCommandOutput');
+const selectedCount = document.getElementById('selectedCount');
+const copyGeneratedBtn = document.getElementById('copyGeneratedBtn');
+
+if (toggleGeneratorBtn) {
+    toggleGeneratorBtn.addEventListener('click', () => {
+        const isGenerator = container.classList.toggle('generator-active');
+        if (isGenerator) {
+            generatorPanel.style.display = 'block';
+            toggleGeneratorBtn.innerText = 'Exit Generator';
+            toggleGeneratorBtn.style.background = 'var(--bo3-orange)';
+            toggleGeneratorBtn.style.color = '#000';
+        } else {
+            generatorPanel.style.display = 'none';
+            toggleGeneratorBtn.innerText = 'Pack Generator';
+            toggleGeneratorBtn.style.background = '#222';
+            toggleGeneratorBtn.style.color = 'var(--text-main)';
+        }
+    });
+}
+
+function toggleSelection(index, btnElement) {
+    const gum = gobblegums[index];
+    const gumIndex = selectedGums.findIndex(g => g.name === gum.name);
+    
+    if (gumIndex > -1) {
+        // Remove from selection
+        selectedGums.splice(gumIndex, 1);
+        btnElement.classList.remove('selected');
+        btnElement.innerText = 'Select';
+    } else {
+        if (selectedGums.length >= maxSelection) {
+            alert('You can only select up to 5 GobbleGums!');
+            return;
+        }
+        // Add to selection
+        selectedGums.push(gum);
+        btnElement.classList.add('selected');
+        btnElement.innerText = 'Selected';
+    }
+    
+    updateGeneratorPanel();
+}
+
+function updateGeneratorPanel() {
+    selectedCount.innerText = selectedGums.length;
+    
+    // Update grid images
+    selectedGumsGrid.innerHTML = '';
+    selectedGums.forEach((gum) => {
+        const imageName = gum.name.replace(/['?!]/g, '').split(' ').join('_') + '_GobbleGum_BO3.webp';
+        selectedGumsGrid.innerHTML += `
+            <div class="selected-gum-item">
+                <img src="images/${imageName}" alt="${gum.name}">
+                <span>${gum.name}</span>
+            </div>
+        `;
+    });
+    
+    // Generate command string
+    // Modifies base command ID to bgb_1, bgb_2, etc.
+    let fullCommand = '';
+    selectedGums.forEach((gum, i) => {
+        // extract the value from '/modvar bgb_1 XX'
+        const parts = gum.command.split(' ');
+        const valueId = parts[2];
+        fullCommand += `/modvar bgb_${i + 1} ${valueId}; `;
+    });
+    
+    generatedCommandOutput.value = fullCommand.trim();
+}
+
+if (copyGeneratedBtn) {
+    copyGeneratedBtn.addEventListener('click', () => {
+        if (generatedCommandOutput.value) {
+            navigator.clipboard.writeText(generatedCommandOutput.value);
+            const originalText = copyGeneratedBtn.innerText;
+            copyGeneratedBtn.innerText = 'Copied!';
+            setTimeout(() => {
+                copyGeneratedBtn.innerText = originalText;
+            }, 2000);
+        }
+    });
+}
+
+// Modal Popup Functionality
+const gumModal = document.getElementById('gumModal');
+const closeModal = document.getElementById('closeModal');
+const modalImage = document.getElementById('modalImage');
+const modalName = document.getElementById('modalName');
+const modalType = document.getElementById('modalType');
+const modalEffect = document.getElementById('modalEffect');
+
+if (container) {
+    container.addEventListener('click', (e) => {
+        const card = e.target.closest('.gobblegum-card');
+        if (!card) return;
+        
+        // Prevent opening modal if clicking select button or command box in standard mode
+        if (e.target.closest('.select-btn') || 
+           (e.target.closest('.command-box') && !container.classList.contains('generator-active'))) {
+            return;
+        }
+
+        const index = card.getAttribute('data-index');
+        const gum = gobblegums[index];
+        const imageName = gum.name.replace(/['?!]/g, '').split(' ').join('_') + '_GobbleGum_BO3.webp';
+
+        modalImage.src = `images/${imageName}`;
+        modalName.innerText = gum.name;
+        
+        modalType.innerText = `${gum.type} GobbleGum`;
+        modalType.className = `gg-type ${gum.type === 'Mega' ? 'type-mega' : 'type-classic'}`;
+        
+        modalEffect.innerText = gum.effect;
+        
+        gumModal.style.display = 'flex';
+    });
+}
+
+if (closeModal) {
+    closeModal.addEventListener('click', () => {
+        gumModal.style.display = 'none';
+    });
+}
+
+if (gumModal) {
+    gumModal.addEventListener('click', (e) => {
+        if (e.target === gumModal) {
+            gumModal.style.display = 'none';
+        }
+    });
+}
